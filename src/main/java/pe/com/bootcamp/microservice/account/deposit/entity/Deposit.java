@@ -23,7 +23,7 @@ import lombok.Setter;
 public class Deposit {
 	@Id
 	private String id;
- 	private String idAccount;// id cuenta destino
+ 	private String idAccountDestiny;// id cuenta destino
  	private String concept;
  	private String user;
  	private Double Amount; //monto de transaccion

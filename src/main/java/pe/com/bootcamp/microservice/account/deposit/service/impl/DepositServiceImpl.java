@@ -33,7 +33,7 @@ public class DepositServiceImpl implements DepositService {
     	log.info("Dentro de findAll");
     	return  depositRepo.findAll();
     } 
-   
+
 	@Override
 	public Mono<Deposit> save(Deposit d) {
 		d.setStatus(true);
@@ -42,7 +42,9 @@ public class DepositServiceImpl implements DepositService {
 			log.info("Dentro de doOnSuccess");
 			x.setStatus(true);
 			CalculationService ca = (amount, balance) ->  balance + amount;
-			webclient.getAccount(x.getIdAccount()).switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NO_CONTENT))).flatMap(f -> {
+			webclient.getAccount(x.getIdAccountDestiny())
+			.switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NO_CONTENT)))
+			.flatMap(f -> {
 				f.setBalance(ca.Calcule(x.getAmount(), f.getBalance()));
 				d.setInitialBalance(f.getBalance());
 				log.info("Dentro de subscribe");
@@ -56,7 +58,7 @@ public class DepositServiceImpl implements DepositService {
 	        return  depositRepo.findById(d.getId())
 	                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NO_CONTENT)))
 	                .flatMap(o -> {
-	                	if (d.getIdAccount() != null) {o.setIdAccount(d.getIdAccount());}
+	                	if (d.getIdAccountDestiny() != null) {o.setIdAccountDestiny(d.getIdAccountDestiny());}
 	                	if (d.getConcept() != null) {o.setConcept(d.getConcept());}
 	                	if (d.getUser() != null) {o.setUser(d.getUser());}
 	                	if (d.getAmount() != null) {o.setAmount(d.getAmount());}
